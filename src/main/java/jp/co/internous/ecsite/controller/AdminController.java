@@ -35,11 +35,11 @@ public class AdminController {
 		
 		MstUser user = userMapper.findByUserNameAndPassword(form);
 		
-		if(user.getIsAdmin() == 0) {
+		if(user == null) {
 			model.addAttribute("errMessage","ユーザー名またはパスワードが違います。");
 			return "forward:/ecsite/admin/";
 		}
-		if(user == null) {
+		if(user.getIsAdmin() == 0) {
 			model.addAttribute("errMessage","管理者ではありません。");
 			return "forward:/ecsite/admin/";
 		}

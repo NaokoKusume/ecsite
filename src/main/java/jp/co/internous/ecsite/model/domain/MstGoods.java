@@ -21,7 +21,7 @@ public class MstGoods {
 		this.id = id;
 	}
 	
-	public String getGoddsName() {
+	public String getGoodsName() {
 		return goodsName;
 	}
 	public void setGoodsName(String goodsName) {
@@ -38,7 +38,7 @@ public class MstGoods {
 	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(Timestamp CreatedAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 	

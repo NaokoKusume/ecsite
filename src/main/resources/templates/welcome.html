@@ -27,7 +27,7 @@
   
   <form name="goodsForm" id="adminPage" method="post" action="/ecsite/admin/goodsMst">
     
-    <button type="submit" th:if="${userName!= null}">新規商品追加</button>
+    <button type="submit" th:if="${userName != null}">新規商品追加</button>
     <input type="hidden" name="userName" th:value="${userName}" />
     <input type="hidden" name="password" th:value="${passwoad}" />
   </form>

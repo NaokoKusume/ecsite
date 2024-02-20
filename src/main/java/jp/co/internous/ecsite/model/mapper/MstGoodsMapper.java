@@ -16,7 +16,7 @@ public interface MstGoodsMapper {
 	@Select(value="SELECT * FROM mst_goods")
 	List<MstGoods> findAll();
 	
-	@Insert("INSERT INTO mst_goods (goods_name,price) VALUES (#{goodsName),#{price}")
+	@Insert("INSERT INTO mst_goods (goods_name,price) VALUES (#{goodsName},#{price})")
 	@Options(useGeneratedKeys=true, keyProperty="id")
 	int insert(MstGoods goods);
 	
