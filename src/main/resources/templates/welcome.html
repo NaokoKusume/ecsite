@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+  
+  <header>
+    <h1>EC Site --管理者ページ</h1>
+  </header>
+  <table id="adminTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>商品名</th><th>価格</th><th>削除</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="item:${goods}">
+        <td th:text="${item.id}" />
+        <td th:text="${item.goodsName}" />
+        <td th:text="${item.price}" />
+        <td><button type="submit" class="deleteBtn">削除</button></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <form name="goodsForm" id="adminPage" method="post" action="/ecsite/admin/goodsMst">
+    
+    <button type="submit" th:if="${userName!= null}">新規商品追加</button>
+    <input type="hidden" name="userName" th:value="${userName}" />
+    <input type="hidden" name="password" th:value="${passwoad}" />
+  </form>
+
+</body>
+</html>
