@@ -21,6 +21,6 @@ public interface MstGoodsMapper {
 	int insert(MstGoods goods);
 	
 	@Update("DELETE FROM mst_goods WHERE id = #{id}")
-	int deleteByid(int id);
+	int deleteById(int id);
 
 }
