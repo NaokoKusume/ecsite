@@ -21,6 +21,12 @@
       cartBtns.forEach((btn) => {
         btn.addEventListener("click", addCart);
       });
+
+      //"id=purchaseBtn"を持つ要素にて"click"イベントが発火した際、purchase関数を呼び出す
+      document.getElementById("purchaseBtn").addEventListener("click", purchase);
+
+      //"id=historyBtn"を持つ要素にて"click"イベントが発火した際、showHistory関数を呼び出す
+      document.getElementById("historyBtn").addEventLitener("click",showHistory);
     });
 
 
@@ -137,6 +143,88 @@
       while (tr.lastChild) {
         tr.removeChild(tr.lastChild);
       }
+    }
+    /*
+    *purchase関数
+    *「購入」ボタンのclickイベントにより呼び出される
+    */
+    function purchase(event) {
+
+      /*
+      *JavaにPOST送信するオブジェクトを取得・設定する
+      *※cartListはグローバル変数
+      */
+      const postObj = {
+        "userId": document.getElementById("hiddenUserId").value,
+        "cartList": cartList
+      };
+      fetch("/ecsite/api/purchase", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(postObj),
+      })
+        .then(response => response.text())
+        .then(result => {
+          alert(`${result}種類の商品を購入しました。`);
+          const countElements = document.querySelectorAll(".count");
+          countElements.forEach(element => {
+            element.value = 0;
+          });
+
+          //カート表のtbody内の要素をクリアする
+          init();
+          //グローバル変数cartListをクリアする
+          cartList = [];
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+    }
+    /*
+    *showHistory関数
+    *「履歴」ボタンのclickイベントにより呼び出される
+    */
+    function showHistory(event) {
+
+      //JavaにPOST送信するオブジェクトを取得・設定する
+      const postObj = {"userId": document.getElementById("hiddenUserId").value};
+
+      fetch("/ecsite/api/history", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(postObj),
+      })
+        .then(response => response.text())
+        .then(result => {
+          const historyList = JSON.parse(result);
+
+          //id:historyのテーブルからtbodyを取得する
+          const tbody = document.querySelector("#history tbody");
+
+          //履歴表をすべてクリアする
+          while (tbody.lastChild) {
+            tbody.removeChild(tbody.lastChild);
+          }
+
+          historyList.forEach((history, index) => {
+            //行(tr)作成
+            const tr = document.createElement("tr");
+            //履歴情報の中から、表に出力するキーを限定するために配列化しておく
+            const keys = ["goodsName", "itemCount", "createdAt"];
+
+            //for of　ループでkeyを回し、表のtdを作成、trに追加する
+            for (key of keys) {
+              const td = document.createElement("td");
+              td.innerText = history[key];
+              tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+          });
+
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
     }
   </script>
 </head>
