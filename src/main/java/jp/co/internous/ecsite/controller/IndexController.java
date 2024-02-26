@@ -58,6 +58,13 @@ public class IndexController {
 
 		return gson.toJson(user);
 	}
+	
+	@RequestMapping("/singUp")
+	public String singUp() {
+		return "singup";
+		
+	}
+	
 
 	@ResponseBody
 	@PostMapping("/api/purchase")

@@ -30,7 +30,15 @@ header div {
   text-align: right;
 }
 
+header a {
+  color: white;
+}
+
 /*ユーザー名とパスワードのinputの幅を設定*/
+input[name=fullName]{
+  width: 200px;
+}
+
 input[name=userName]{
   width: 100px;
 }
