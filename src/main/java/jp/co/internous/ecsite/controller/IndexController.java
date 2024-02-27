@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +38,7 @@ public class IndexController {
 
 	private Gson gson = new Gson();
 
-	@GetMapping("/")
+	@RequestMapping("/")
 	public String index(Model model) {
 		List<MstGoods> goods = goodsMapper.findAll();
 		model.addAttribute("goods", goods);
@@ -68,15 +67,12 @@ public class IndexController {
 
 	@PostMapping("/register")
 	public String register(UserForm userForm) {
+		
+		MstUser user = new MstUser();
 
-		MstUser newUser = new MstUser();
-		newUser.setUserName(userForm.getUserName());
-		newUser.setFullName(userForm.getFullName());
-		newUser.setPassword(userForm.getPassword());
+		userMapper.insert(user);
 
-		userMapper.insert(newUser);
-
-		return "forward:/ecsite/index/";
+		return "forward:/ecsite/";
 	}
 
 	@ResponseBody

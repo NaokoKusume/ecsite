@@ -16,6 +16,6 @@ public interface MstUserMapper {
 	
 	@Insert("INSERT INTO mst_user (user_name,full_name,password,is_admin) VALUES (#{userName},#{fullName},#{password},0)")
 	@Options(useGeneratedKeys=true, keyProperty="id")
-	int insert(MstUser newUser);
+	int insert(MstUser user);
 
 }
