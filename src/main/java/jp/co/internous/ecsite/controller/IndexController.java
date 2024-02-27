@@ -19,6 +19,7 @@ import jp.co.internous.ecsite.model.dto.HistoryDto;
 import jp.co.internous.ecsite.model.form.CartForm;
 import jp.co.internous.ecsite.model.form.HistoryForm;
 import jp.co.internous.ecsite.model.form.LoginForm;
+import jp.co.internous.ecsite.model.form.UserForm;
 import jp.co.internous.ecsite.model.mapper.MstGoodsMapper;
 import jp.co.internous.ecsite.model.mapper.MstUserMapper;
 import jp.co.internous.ecsite.model.mapper.TblPurchaseMapper;
@@ -58,31 +59,43 @@ public class IndexController {
 
 		return gson.toJson(user);
 	}
-	
+
 	@RequestMapping("/singUp")
 	public String singUp() {
 		return "singup";
-		
+
 	}
-	
+
+	@PostMapping("/register")
+	public String register(UserForm userForm) {
+
+		MstUser newUser = new MstUser();
+		newUser.setUserName(userForm.getUserName());
+		newUser.setFullName(userForm.getFullName());
+		newUser.setPassword(userForm.getPassword());
+
+		userMapper.insert(newUser);
+
+		return "forward:/ecsite/index/";
+	}
 
 	@ResponseBody
 	@PostMapping("/api/purchase")
 	public int purchaseApi(@RequestBody CartForm f) {
-		
+
 		f.getCartList().forEach((c) -> {
 			int total = c.getPrice() * c.getCount();
-			purchaseMapper.insert(f.getUserId(),c.getId(),c.getGoodsName(),c.getCount(),total);
+			purchaseMapper.insert(f.getUserId(), c.getId(), c.getGoodsName(), c.getCount(), total);
 		});
 		return f.getCartList().size();
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/api/history")
 	public String historyApi(@RequestBody HistoryForm f) {
 		int userId = f.getUserId();
-		List<HistoryDto>history = purchaseMapper.findHistory(userId);
-		
+		List<HistoryDto> history = purchaseMapper.findHistory(userId);
+
 		return gson.toJson(history);
 	}
 }
