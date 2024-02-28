@@ -66,10 +66,21 @@ public class IndexController {
 	}
 
 	@PostMapping("/register")
-	public String register(UserForm userForm) {
+	public String register(UserForm userForm,Model model) {
+		
+		MstUser newUser = userMapper.findByUser(userForm);
+		
+		if(newUser != null) {
+			model.addAttribute("errMessage","このユーザー名はすでに使用されています。");
+			return "forward:/ecsite/singUp";
+		}
 		
 		MstUser user = new MstUser();
-
+		
+		user.setUserName(userForm.getUserName());
+		user.setFullName(userForm.getFullName());
+		user.setPassword(userForm.getPassword());
+		
 		userMapper.insert(user);
 
 		return "forward:/ecsite/";
