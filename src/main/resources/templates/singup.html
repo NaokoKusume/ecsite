@@ -2,7 +2,7 @@
 <html xmlns:th="www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ECサイト</title>
 <link href="/css/style.css"rel="stylesheet" />
 </head>
 <body>
@@ -13,9 +13,9 @@
   <div id="singupPage">
     <h2>ユーザー　新規登録</h2>
     <form name="registerForm" id="registerForm" method="post" action="/ecsite/register">
-      <p>氏名　　　　　：<input type="text" name="fullName" /></p>
-      <p>ユーザー名　　：<input type="text" name="userName" /></p>
-      <p>パスワード　　：<input type="password" name="password" /></p>
+      <p>氏名　　　　　：<input type="text" th:value="${fullName}" name="fullName" /></p>
+      <p>ユーザー名　　：<input type="text" th:value="${userName}" name="userName" /></p>
+      <p>パスワード　　：<input type="password" th:value="${password}" name="password" /></p>
       <button type="submit">登録</button>
     </form>
     

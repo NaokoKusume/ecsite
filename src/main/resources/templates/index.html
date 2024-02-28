@@ -17,16 +17,24 @@
 
       //"class=cartBtn"を持つ要素（複数存在するためclass指定）を取得する
       const cartBtns = document.querySelectorAll(".cartBtn");
-      //cartBtnをループさせ、個々のボタンにて"click"イベントが発火した際addCart関数を呼び出す
-      cartBtns.forEach((btn) => {
-        btn.addEventListener("click", addCart);
-      });
 
-      //"id=purchaseBtn"を持つ要素にて"click"イベントが発火した際、purchase関数を呼び出す
-      document.getElementById("purchaseBtn").addEventListener("click", purchase);
+      if () {
 
-      //"id=historyBtn"を持つ要素にて"click"イベントが発火した際、showHistory関数を呼び出す
-      document.getElementById("historyBtn").addEventListener("click",showHistory);
+        //cartBtnをループさせ、個々のボタンにて"click"イベントが発火した際addCart関数を呼び出す
+        cartBtns.forEach((btn) => {
+          btn.addEventListener("click", addCart);
+        });
+
+        //"id=purchaseBtn"を持つ要素にて"click"イベントが発火した際、purchase関数を呼び出す
+        document.getElementById("purchaseBtn").addEventListener("click", purchase);
+
+        //"id=historyBtn"を持つ要素にて"click"イベントが発火した際、showHistory関数を呼び出す
+        document.getElementById("historyBtn").addEventListener("click", showHistory);
+
+      } else {
+        alert("ログインしてください。");
+      }
+
     });
 
 

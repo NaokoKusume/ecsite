@@ -72,6 +72,9 @@ public class IndexController {
 		
 		if(newUser != null) {
 			model.addAttribute("errMessage","このユーザー名はすでに使用されています。");
+			model.addAttribute("userName",userForm.getUserName());
+			model.addAttribute("fullName",userForm.getFullName());
+			model.addAttribute("password",userForm.getPassword());
 			return "forward:/ecsite/singUp";
 		}
 		
@@ -80,6 +83,14 @@ public class IndexController {
 		user.setUserName(userForm.getUserName());
 		user.setFullName(userForm.getFullName());
 		user.setPassword(userForm.getPassword());
+		
+		if(userForm.getUserName().equals("") || userForm.getFullName().equals("") || userForm.getPassword().equals("")) {
+			model.addAttribute("errMessage","全ての項目を入力してください。");
+			model.addAttribute("userName",userForm.getUserName());
+			model.addAttribute("fullName",userForm.getFullName());
+			model.addAttribute("password",userForm.getPassword());
+			return "forward:/ecsite/singUp";
+		}
 		
 		userMapper.insert(user);
 
