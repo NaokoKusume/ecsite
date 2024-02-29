@@ -70,7 +70,7 @@
           document.querySelector("input[name=userName]").value = "";
 
           document.querySelector("input[name=password]").value = "";
-          
+
           console.log(user);
         })
         .catch(error => {
@@ -80,60 +80,61 @@
 
     function addCart(event) {
 
-      if (document.getElementById("hiddenUserId").value == 0) {
+      if (document.getElementById("hiddenUserId").value === 0) {
         alert("ログインしてください。");
-      } else {
-
-        //カート追加ボタンの親要素のさらに親要素から、"td"要素をすべて抽出し、tdListに格納する
-        const tdList = event.target.parentElement.parentElement.querySelectorAll("td");
-
-        //tdListから、商品情報を取得し、JSオブジェクト(key: value)形式でgoodsInfoに代入する
-        const goodsInfo = {
-          "id": tdList.item(0).innerText,
-          "goodsName": tdList.item(1).innerText,
-          "price": tdList.item(2).innerText,
-          "count": tdList.item(3).querySelector("input").value
-        };
-        if (goodsInfo.count === "0" || goodsInfo.count === "") {
-          alert("注文数が0または空欄です。");
-          return;//注文数０ならば、ここで関数の処理修了
-        }
-
-        //グローバル変数cartListに対して、カート追加対象の商品情報をpushする
-        cartList.push(goodsInfo);
-
-        //カート表はゼロから再構築するため、tbody内の要素をクリアする
-        initCart();
-
-        //グローバル変数cartListをループさせ、カート表を再構築する
-        cartList.forEach(cart => {
-          //行(tr)作成
-          const tr = document.createElement("tr");
-          //cartオブジェクトを[key,value]でループさせ、個々のtd要素を作成し、trに追加する（本処理ではkeyは未使用）
-          for ([key, value] of Object.entries(cart)) {
-            const td = document.createElement("td");
-            td.innerText = value;
-            tr.appendChild(td);
-          }
-          //カート削除ボタンを作成する
-          const removeBtn = document.createElement("button");
-          removeBtn.innerText = "カート削除";
-          //カート削除ボタンにclass属性を設定する
-          removeBtn.setAttribute("class", "removeBtn");
-          //カート削除ボタンに対し、click時のイベントリスナを追加する
-          removeBtn.addEventListener("click", removeCart);
-
-          //td要素を作成し、カート削除ボタンを子要素として追加する
-          const td = document.createElement("td");
-          td.appendChild(removeBtn);
-
-          //tr要素を作成し、カート削除ボタン配置済のtdを子要素として追加する
-          tr.appendChild(td);
-          const tbody = document.querySelector("#cart tbody");
-          tbody.appendChild(tr);
-        });
+        return;
       }
+
+      //カート追加ボタンの親要素のさらに親要素から、"td"要素をすべて抽出し、tdListに格納する
+      const tdList = event.target.parentElement.parentElement.querySelectorAll("td");
+
+      //tdListから、商品情報を取得し、JSオブジェクト(key: value)形式でgoodsInfoに代入する
+      const goodsInfo = {
+        "id": tdList.item(0).innerText,
+        "goodsName": tdList.item(1).innerText,
+        "price": tdList.item(2).innerText,
+        "count": tdList.item(3).querySelector("input").value
+      };
+      if (goodsInfo.count === "0" || goodsInfo.count === "") {
+        alert("注文数が0または空欄です。");
+        return;//注文数０ならば、ここで関数の処理修了
+      }
+
+      //グローバル変数cartListに対して、カート追加対象の商品情報をpushする
+      cartList.push(goodsInfo);
+
+      //カート表はゼロから再構築するため、tbody内の要素をクリアする
+      initCart();
+
+      //グローバル変数cartListをループさせ、カート表を再構築する
+      cartList.forEach(cart => {
+        //行(tr)作成
+        const tr = document.createElement("tr");
+        //cartオブジェクトを[key,value]でループさせ、個々のtd要素を作成し、trに追加する（本処理ではkeyは未使用）
+        for ([key, value] of Object.entries(cart)) {
+          const td = document.createElement("td");
+          td.innerText = value;
+          tr.appendChild(td);
+        }
+        //カート削除ボタンを作成する
+        const removeBtn = document.createElement("button");
+        removeBtn.innerText = "カート削除";
+        //カート削除ボタンにclass属性を設定する
+        removeBtn.setAttribute("class", "removeBtn");
+        //カート削除ボタンに対し、click時のイベントリスナを追加する
+        removeBtn.addEventListener("click", removeCart);
+
+        //td要素を作成し、カート削除ボタンを子要素として追加する
+        const td = document.createElement("td");
+        td.appendChild(removeBtn);
+
+        //tr要素を作成し、カート削除ボタン配置済のtdを子要素として追加する
+        tr.appendChild(td);
+        const tbody = document.querySelector("#cart tbody");
+        tbody.appendChild(tr);
+      });
     }
+
 
     function removeCart(event) {
 
@@ -160,91 +161,93 @@
     */
     function purchase(event) {
 
-      if (document.getElementById("hiddenUserId").value == 0) {
+      if (document.getElementById("hiddenUserId").value === 0) {
         alert("ログインしてください。");
-      } else {
-
-        /*
-        *JavaにPOST送信するオブジェクトを取得・設定する
-        *※cartListはグローバル変数
-        */
-        const postObj = {
-          "userId": document.getElementById("hiddenUserId").value,
-          "cartList": cartList
-        };
-        fetch("/ecsite/api/purchase", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(postObj),
-        })
-          .then(response => response.text())
-          .then(result => {
-            alert(`${result}種類の商品を購入しました。`);
-            const countElements = document.querySelectorAll(".count");
-            countElements.forEach(element => {
-              element.value = 0;
-            });
-
-            //カート表のtbody内の要素をクリアする
-            init();
-            //グローバル変数cartListをクリアする
-            cartList = [];
-          })
+        return;
       }
+
+      /*
+      *JavaにPOST送信するオブジェクトを取得・設定する
+      *※cartListはグローバル変数
+      */
+      const postObj = {
+        "userId": document.getElementById("hiddenUserId").value,
+        "cartList": cartList
+      };
+      fetch("/ecsite/api/purchase", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(postObj),
+      })
+        .then(response => response.text())
+        .then(result => {
+          alert(`${result}種類の商品を購入しました。`);
+          const countElements = document.querySelectorAll(".count");
+          countElements.forEach(element => {
+            element.value = 0;
+          });
+
+          //カート表のtbody内の要素をクリアする
+          init();
+          //グローバル変数cartListをクリアする
+          cartList = [];
+        })
     }
+
     /*
     *showHistory関数
     *「履歴」ボタンのclickイベントにより呼び出される
     */
     function showHistory(event) {
 
-      if (document.getElementById("hiddenUserId").value == 0) {
+      if (document.getElementById("hiddenUserId").value === 0) {
         alert("ログインしてください。");
-      } else {
-
-        //JavaにPOST送信するオブジェクトを取得・設定する
-        const postObj = {"userId": document.getElementById("hiddenUserId").value};
-
-        fetch("/ecsite/api/history", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(postObj),
-        })
-          .then(response => response.text())
-          .then(result => {
-            const historyList = JSON.parse(result);
-
-            //id:historyのテーブルからtbodyを取得する
-            const tbody = document.querySelector("#history tbody");
-
-            //履歴表をすべてクリアする
-            while (tbody.lastChild) {
-              tbody.removeChild(tbody.lastChild);
-            }
-
-            historyList.forEach((history, index) => {
-              //行(tr)作成
-              const tr = document.createElement("tr");
-              //履歴情報の中から、表に出力するキーを限定するために配列化しておく
-              const keys = ["goodsName", "itemCount", "createdAt"];
-
-              //for of　ループでkeyを回し、表のtdを作成、trに追加する
-              for (key of keys) {
-                const td = document.createElement("td");
-                td.innerText = history[key];
-                tr.appendChild(td);
-              }
-              tbody.appendChild(tr);
-            });
-
-
-          })
-
-          .catch(error => {
-            console.error("Error:", error);
-          });
+        return;
       }
+
+      //JavaにPOST送信するオブジェクトを取得・設定する
+      const postObj = {"userId": document.getElementById("hiddenUserId").value};
+
+      fetch("/ecsite/api/history", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(postObj),
+      })
+        .then(response => response.text())
+        .then(result => {
+          const historyList = JSON.parse(result);
+
+          //id:historyのテーブルからtbodyを取得する
+          const tbody = document.querySelector("#history tbody");
+
+          //履歴表をすべてクリアする
+          while (tbody.lastChild) {
+            tbody.removeChild(tbody.lastChild);
+          }
+
+          historyList.forEach((history, index) => {
+            //行(tr)作成
+            const tr = document.createElement("tr");
+            //履歴情報の中から、表に出力するキーを限定するために配列化しておく
+            const keys = ["goodsName", "itemCount", "createdAt"];
+
+            //for of　ループでkeyを回し、表のtdを作成、trに追加する
+            for (key of keys) {
+              const td = document.createElement("td");
+              td.innerText = history[key];
+              tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+          });
+
+
+        })
+
+        .catch(error => {
+          console.error("Error:", error);
+        });
     }
+
   </script>
 </head>
 
@@ -258,7 +261,7 @@
         <button type="submit">ログイン</button>
       </form>
 
-      <span id="welcome">ようこそ！　ゲストさん<a href="/ecsite/singUp">(新規登録はこちら)</a></span>
+      <span id="welcome">ようこそ！　ゲストさん<a href="/ecsite/singup">(新規登録はこちら)</a></span>
       <input type="hidden" id="hiddenUserId" value="0" />
     </div>
   </header>

@@ -59,8 +59,8 @@ public class IndexController {
 		return gson.toJson(user);
 	}
 
-	@RequestMapping("/singUp")
-	public String singUp() {
+	@RequestMapping("/singup")
+	public String singup() {
 		return "singup";
 
 	}
@@ -68,14 +68,16 @@ public class IndexController {
 	@PostMapping("/register")
 	public String register(UserForm userForm,Model model) {
 		
-		MstUser newUser = userMapper.findByUser(userForm);
+		MstUser registertedUser = userMapper.findByUser(userForm);
 		
-		if(newUser != null) {
+		model.addAttribute("userName",userForm.getUserName());
+		model.addAttribute("fullName",userForm.getFullName());
+		model.addAttribute("password",userForm.getPassword());
+		
+		if(registertedUser != null) {
 			model.addAttribute("errMessage","このユーザー名はすでに使用されています。");
-			model.addAttribute("userName",userForm.getUserName());
-			model.addAttribute("fullName",userForm.getFullName());
-			model.addAttribute("password",userForm.getPassword());
-			return "forward:/ecsite/singUp";
+			
+			return "forward:/ecsite/singup";
 		}
 		
 		MstUser user = new MstUser();
@@ -86,10 +88,8 @@ public class IndexController {
 		
 		if(userForm.getUserName().equals("") || userForm.getFullName().equals("") || userForm.getPassword().equals("")) {
 			model.addAttribute("errMessage","全ての項目を入力してください。");
-			model.addAttribute("userName",userForm.getUserName());
-			model.addAttribute("fullName",userForm.getFullName());
-			model.addAttribute("password",userForm.getPassword());
-			return "forward:/ecsite/singUp";
+			
+			return "forward:/ecsite/singup";
 		}
 		
 		userMapper.insert(user);
