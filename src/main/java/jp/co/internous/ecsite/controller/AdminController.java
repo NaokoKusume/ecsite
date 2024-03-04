@@ -81,6 +81,7 @@ public class AdminController {
 	public String deleteApi(@RequestBody GoodsForm f,Model m) {
 		try {
 			goodsMapper.deleteById(f.getId());
+			//不正な引数、または不適切な引数をメソッドに渡したことを示すためにスローされます
 		}catch(IllegalArgumentException e) {
 			return "-1";
 		}
