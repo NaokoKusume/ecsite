@@ -71,6 +71,12 @@
 
           document.querySelector("input[name=password]").value = "";
 
+          if (document.getElementById("hiddenUserId").value === "0") {
+            document.getElementById("link").innerText = "(新規登録はこちら)";
+          } else{
+             document.getElementById("link").innerText = "";
+          }
+
         })
         .catch(error => {
           console.error("Error:", error);
@@ -260,7 +266,7 @@
         <button type="submit">ログイン</button>
       </form>
 
-      <span id="welcome">ようこそ！　ゲストさん<a href="/ecsite/singup">(新規登録はこちら)</a></span>
+      <span id="welcome">ようこそ！　ゲストさん</span><a id="link" href="/ecsite/singup">(新規登録はこちら)</a>
       <input type="hidden" id="hiddenUserId" value="0" />
     </div>
   </header>
